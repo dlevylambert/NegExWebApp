@@ -1,8 +1,5 @@
 # NegExWebApp
 
-
-# React + Flask starter kit
-
 Install your dependencies:
 ```
 pip install virtualenv
