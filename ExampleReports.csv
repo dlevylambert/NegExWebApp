@@ -1,0 +1,1 @@
+﻿Start Phrase,Target Phrases (comma separated),Skip Phrases (comma separated)start,"pulmonary embolism,pe",SKIP THISReport Text,,Check if there is a pulmonary embolism.START SKIP THIS there is a pulmonary embolism. There is no pulmonary embolism.,,there is a pulmonary embolism.,,there is a pe.,,
