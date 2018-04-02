@@ -34,11 +34,12 @@ class FileUpload extends React.Component {
   	var href = 'data:application/octet-stream,' + encodedUri
     return (
     	<div>
+        <p>Create a csv file using the following template and upload it to find all incidences of your diagnosis of interest</p>
 	      <form onSubmit={this.onFormSubmit}>
 	        <input type='file' onChange={this.onChange} />
-	        <button type='submit'>Upload</button>
+	        {this.state.file && <button type='submit'>Upload</button>}
 	      </form>
-	      {this.state.fileContents && <a href={href} download="my_data.csv">Download Results</a>}
+	      {this.state.fileContents && <a href={href} className="btn btn-success" download="my_data.csv">Download Results</a>}
 	    </div>
    )
   }

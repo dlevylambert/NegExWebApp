@@ -5,6 +5,7 @@ var NegEx = React.createClass({
   render() {
     return (
     	<div>
+    		<h1>Neg Ex Implementation</h1>
 	    	<FileUpload/>
     	</div>
     );

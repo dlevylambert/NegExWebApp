@@ -11,6 +11,10 @@ app = Flask(__name__)
 def home():
   return render_template('index.html')
 
+@app.route('/negex_implementation')
+def neg_ex():
+  return render_template('index.html')
+
 @app.route('/upload_file', methods=['POST'])
 def upload_file():
 	f = request.files['file']
