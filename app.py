@@ -1,17 +1,76 @@
 import csv
 import io
-from flask import Flask, render_template, request, jsonify, make_response
+import urllib.request as urllib_request
+from flask import Flask, render_template, request, redirect, jsonify, make_response
 from werkzeug.datastructures import ImmutableMultiDict
 from util import parse_and_format_csv
 from negExImplementation import evaluate_reports
+from flask.ext.login import current_user, LoginManager, login_user, login_required, logout_user
 
 app = Flask(__name__)
+app.secret_key = "super secret key"
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+class AppUser:
+    def __init__(self, kerberos):
+        self.kerberos = kerberos
+        self.active = True
+
+    def is_active(self):
+        return self.active
+
+    def is_anonymous(self):
+        return False
+
+    def is_authenticated(self):
+        return True
+
+    def get_id(self):
+    	return self.kerberos
+
+@login_manager.user_loader
+def load_user(kerberos):
+    return AppUser(kerberos)
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    return redirect('/login')
+
+@app.route('/login')
+def login():
+	return render_template('index.html')
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect('/login')
+
+@app.route('/login-request', methods=['POST'])
+def login_request():
+	kerberos = request.get_json()['kerberos']
+	password = request.get_json()['password']
+	request_url = 'http://puff.med.nyu.edu/ProxyAuth/authUser?type=SOMwithSquareSpecial&user=' + kerberos + '&password=' + password
+	response = urllib_request.urlopen(request_url)
+	response_string = response.read().decode('utf-8')
+	if response_string == "SUCCESS":
+		login_user(AppUser(kerberos))
+	return jsonify({'login_status': response_string})
+
+@app.route('/is-logged-in', methods=['GET'])
+def is_logged_in():
+	is_logged_in = current_user.is_authenticated and current_user.is_authenticated()
+	print(current_user.is_authenticated)
+	return jsonify({'logged_in': is_logged_in})
+	
 
 @app.route('/')
 def home():
   return render_template('index.html')
 
 @app.route('/negex_implementation')
+@login_required
 def neg_ex():
   return render_template('index.html')
 
